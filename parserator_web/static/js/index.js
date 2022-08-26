@@ -10,26 +10,32 @@
 //    logFormContent();
 // });
 
+// for (var [key, value] of formData.entries()) { 
+//   console.log(key, value);
+// }
+
 window.addEventListener("load", () => {
-  function sendAddress() {
-    const XHR = new XMLHttpRequest();
+  var url = "api/parse/"
+  const form = document.getElementById("address-form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
     const formData = new FormData(form);
-    for (var [key, value] of formData.entries()) { 
-      console.log(key, value);
+  });
+
+  form.addEventListener('formdata', (e) => {
+    const data = e.formData;
+    for (const value of data.values()) {
+      console.log(value)
     }
+    const XHR = new XMLHttpRequest();
     XHR.addEventListener("load", (event) => {
       alert(event.target.responseText);
     });
     XHR.addEventListener("error", (event) => {
       log.textContext = `${log.textContext}${event.type}: ${event.message}\n`
     });
+
     XHR.open("GET", url);
-    XHR.send(formData);
-  };
-  var url = "api/parse/"
-  const form = document.getElementById("address-form");
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    sendAddress();
+    XHR.send(data);
   });
 });
